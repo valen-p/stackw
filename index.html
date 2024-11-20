@@ -7,8 +7,8 @@
   <meta name="description" content="" />
 
   <!-- calls for the arcgis api's CSS file and JS library. -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.25/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.18/"></script>
 
   <!-- Adding the modules, API key, and map constant needed for a full screen map app -->
   <script>
@@ -31,12 +31,12 @@
 
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurGOndvn56RaIuEG-ymH-92haus5XOWjwfQcNHTRTeMO7efrrwIO_P1WvjAaKi6OQjJ3GIY_futaMIJKN2YL-EYHTHG9Rv2I800yOHi-R0CETmNtIv1jHJiXDbTrmTiJeXLEP-6WMH6Zj1mNwmZT3z5l5nB_2nXXSVTEuDcqBFo737s7VpsbqFXNy4GrGXkfT9juBGmdeoQdWJ8oZqkquRShfozv5LIG5tRroi4bCPx5GAT1_IuAFCiIJ";
       const map = new Map({
-        basemap: "arcgis-topographic" // Basemap layer
+        basemap: "streets-navigation-vector" // Basemap layer
       });
 
       const view = new MapView({
           map: map,
-          center: [-97.7431, 30.2672], // Longitude, latitude
+          center: [-118.805, 34.027], // Longitude, latitude
           zoom: 13, // Zoom level
           container: "viewDiv" // Div element
         });
@@ -153,10 +153,31 @@
 
         //adding the const for the feature layer
 const myAirports = new FeatureLayer({
- url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Airports1/FeatureServer",
+ url: "YOUR_FEATURE_LAYER_URL",
  
  //adding the popup here
  outFields: ["AirportCode"],
+
+labelingInfo: [
+            {
+              symbol: {
+                type: "text",
+                color: "#FFFFFF",
+                haloColor: "#5E8D74",
+                haloSize: "2px",
+                font: {
+                  size: "12px",
+                  family: "Noto Sans",
+                  style: "italic",
+                  weight: "normal"
+                }
+              },
+              labelPlacement: "above-center",
+              labelExpressionInfo: {
+                expression: "$feature.Fac_Name"
+              }
+            }
+          ]
 
 });
 
