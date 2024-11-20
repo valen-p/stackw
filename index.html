@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hello, AGOL!</title>
+  <title>Hello, I am writing to AGOL!</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="" />
 
   <!-- calls for the arcgis api's CSS file and JS library. -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light/main.css">
-  <script src="https://js.arcgis.com/4.18/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.25/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.25/"></script>
 
   <!-- Adding the modules, API key, and map constant needed for a full screen map app -->
   <script>
@@ -25,18 +25,19 @@
       //adding in the module for the feature layers
       "esri/layers/FeatureLayer",
 
+      //adding editor widget
       "esri/widgets/Editor"
 
     ], function (esriConfig, Map, MapView, Graphic, GraphicsLayer, FeatureLayer, Editor) {
 
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurGOndvn56RaIuEG-ymH-92haus5XOWjwfQcNHTRTeMO7efrrwIO_P1WvjAaKi6OQjJ3GIY_futaMIJKN2YL-EYHTHG9Rv2I800yOHi-R0CETmNtIv1jHJiXDbTrmTiJeXLEP-6WMH6Zj1mNwmZT3z5l5nB_2nXXSVTEuDcqBFo737s7VpsbqFXNy4GrGXkfT9juBGmdeoQdWJ8oZqkquRShfozv5LIG5tRroi4bCPx5GAT1_IuAFCiIJ";
       const map = new Map({
-        basemap: "streets-navigation-vector" // Basemap layer
+        basemap: "arcgis-topographic" // Basemap layer
       });
 
       const view = new MapView({
           map: map,
-          center: [-118.805, 34.027], // Longitude, latitude
+          center: [-97.7431, 30.2672], // Longitude, latitude
           zoom: 13, // Zoom level
           container: "viewDiv" // Div element
         });
@@ -88,7 +89,7 @@
          // Define a pop-up for usaeduLayer
          const popupEduusa = {
             "title": "EDUs",
-            "content": "<b>Name:</b> {NAME}<br><b>Total Enrollment:</b> {TOT_ENROLL}<br>"
+            "content": "<b>Name:</b> {INSTNM}<br><b>Total Enrollment:</b> {INSTSIZE}<br>"
         }
 
          //adding the const for the feature layer
@@ -96,7 +97,7 @@
           url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Colleges_and_Universities_View/FeatureServer",
 
           //adding the popup here
-          outFields: ["NAME","TOT_ENROLL"],
+          outFields: ["INSTNM","INSTSIZE"],
           popupTemplate: popupEduusa
         });
 
@@ -138,7 +139,7 @@
       };
 
         const airportLayer = new FeatureLayer({
-          url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/US_Airports/FeatureServer",
+          url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Airports1/FeatureServer",
           renderer: airportRenderer,  //calling the icon
 
           definitionExpression: "Fac_Type = 'AIRPORT'", //adding sql to filter for airports
@@ -151,52 +152,34 @@
         //adding the feature layer to the map
         map.add(airportLayer);
 
+
         //adding the const for the feature layer
-const myAirports = new FeatureLayer({
- url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Airports1/FeatureServer",
- 
- //adding the popup here
- outFields: ["AirportCode"],
+        const myAirports = new FeatureLayer({
+        url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Airports1/FeatureServer",
+        
+        //adding the popup here
+        outFields: ["AirportCode"],
 
-labelingInfo: [
-            {
-              symbol: {
-                type: "text",
-                color: "#FFFFFF",
-                haloColor: "#5E8D74",
-                haloSize: "2px",
-                font: {
-                  size: "12px",
-                  family: "Noto Sans",
-                  style: "italic",
-                  weight: "normal"
-                }
-              },
-              labelPlacement: "above-center",
-              labelExpressionInfo: {
-                expression: "$feature.Fac_Name"
-              }
-            }
-          ]
+        });
 
-});
+        //adding the feature layer to the map
+        map.add(myAirports);
 
-//adding the feature layer to the map
-map.add(myAirports);
+        //adding the editor widget
+       // Set the point layer's LayerInfo
+        const pointInfos = {
+          layer: myAirports
+        }
 
-// Set the point layer's LayerInfo
-const pointInfos = {
- layer: myAirports
-}
+        // Begin Editor constructor
+        const editor = new Editor({
+          view: view,
+          layerInfos: [pointInfos]
+        }); // End Editor constructor
 
-// Begin Editor constructor
-const editor = new Editor({
- view: view,
- layerInfos: [pointInfos]
- }); // End Editor constructor
+        // Add the widget to the view
+        view.ui.add(editor, "top-right");
 
-// Add the widget to the view
-view.ui.add(editor, "top-right");
 
     });
   </script>
